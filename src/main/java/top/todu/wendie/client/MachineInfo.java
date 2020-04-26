@@ -1,6 +1,9 @@
 package top.todu.wendie.client;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import oshi.SystemInfo;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * 描述 <br>
@@ -15,6 +18,9 @@ public class MachineInfo {
   private String baseboardSerial;
   /** 主硬盘 */
   //  private String mainHardDiskSerial;
+
+  /** 机器码，根据其他非空字段计算的md5和sha1 */
+  private String machineCode;
 
   private MachineInfo() {}
 
@@ -40,6 +46,9 @@ public class MachineInfo {
         + ", baseboardSerial='"
         + baseboardSerial
         + '\''
+        + ", machineCode='"
+        + machineCode
+        + '\''
         + '}';
   }
 
@@ -61,15 +70,22 @@ public class MachineInfo {
 
     public MachineInfo build() {
       MachineInfo machineInfo = new MachineInfo();
+      StringBuilder sb = new StringBuilder();
       if (this.baseboardSerial) {
         machineInfo.baseboardSerial =
             SYSTEM_INFO.getHardware().getComputerSystem().getBaseboard().getSerialNumber();
+        sb.append(machineInfo.baseboardSerial);
       }
 
       if (this.cpuSerial) {
         machineInfo.cpuSerial = SYSTEM_INFO.getHardware().getProcessor().getProcessorID();
+        sb.append(machineInfo.cpuSerial);
       }
 
+      if (sb.length() != 0) {
+        byte[] bytes = sb.toString().getBytes(StandardCharsets.UTF_8);
+        machineInfo.machineCode = DigestUtils.md5Hex(bytes) + DigestUtils.sha1Hex(bytes);
+      }
       return machineInfo;
     }
 
