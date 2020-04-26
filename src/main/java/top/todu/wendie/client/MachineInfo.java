@@ -27,14 +27,32 @@ public class MachineInfo {
   /** 系统uuid，跟bios相关 只有linux才有 */
   //  private String productUuid;
 
-  public static void main(String[] args) {
-    MachineInfo machineInfo =
-        MachineInfo.builder().enableCpuSerial().enableBaseboardSerial().build();
-    System.out.println(machineInfo);
-  }
-
   public static Builder builder() {
     return new Builder();
+  }
+
+  public String getCpuSerial() {
+    return cpuSerial;
+  }
+
+  public void setCpuSerial(String cpuSerial) {
+    this.cpuSerial = cpuSerial;
+  }
+
+  public String getBaseboardSerial() {
+    return baseboardSerial;
+  }
+
+  public void setBaseboardSerial(String baseboardSerial) {
+    this.baseboardSerial = baseboardSerial;
+  }
+
+  public String getMachineCode() {
+    return machineCode;
+  }
+
+  public void setMachineCode(String machineCode) {
+    this.machineCode = machineCode;
   }
 
   @Override
